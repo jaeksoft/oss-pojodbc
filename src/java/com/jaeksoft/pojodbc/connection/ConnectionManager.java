@@ -36,7 +36,7 @@ import com.jaeksoft.pojodbc.Transaction;
  * 
  * ConnectionManager is the abstract class for all ConnectionManager.
  * 
- * @author Emmanuel Keller
+ * @author Jaeksoft / Emmanuel Keller
  * 
  */
 public abstract class ConnectionManager {
