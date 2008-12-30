@@ -24,6 +24,9 @@
 <project name="Pojodbc" default="dist" basedir=".">
 	<property name="src" location="src/java" />
 	<property name="lib" location="lib" />
+	<property name="doc" location="doc" />
+	<property name="doc-dev" location="${doc}/developer" />
+	<property name="doc-public" location="${doc}/public" />
 	<property name="build" location="ant-build" />
 	<property name="build-release" location="${build}/release" />
 	<property name="build-debug" location="${build}/debug" />
@@ -35,24 +38,23 @@
 		<mkdir dir="${build-debug}" />
 	</target>
 
+	<path id="libclasspath">
+		<fileset dir="${lib}">
+			<include name="**.jar" />
+		</fileset>
+	</path>
+
+	<target name="doc">
+		<javadoc sourcepath="${src}" destdir="${doc-public}" access="protected" classpathref="libclasspath" />
+		<javadoc sourcepath="${src}" destdir="${doc-dev}" access="private" classpathref="libclasspath" />
+	</target>
+
 	<target name="compile-release" depends="init" description="compile the source ">
-		<javac debug="false" optimize="true" compiler="modern" srcdir="${src}" destdir="${build-release}">
-			<classpath>
-				<fileset dir="${lib}">
-					<include name="**.jar" />
-				</fileset>
-			</classpath>
-		</javac>
+		<javac debug="false" optimize="true" compiler="modern" srcdir="${src}" destdir="${build-release}" classpathref="libclasspath" />
 	</target>
 
 	<target name="compile-debug" depends="init" description="compile the source ">
-		<javac debug="true" optimize="false" compiler="modern" srcdir="${src}" destdir="${build-debug}">
-			<classpath>
-				<fileset dir="${lib}">
-					<include name="**.jar" />
-				</fileset>
-			</classpath>
-		</javac>
+		<javac debug="true" optimize="false" compiler="modern" srcdir="${src}" destdir="${build-debug}" classpathref="libclasspath" />
 	</target>
 
 	<target name="dist-release" depends="compile-release">
@@ -65,7 +67,7 @@
 		<jar jarfile="${dist}/pojodbc-debug.jar" basedir="${build-debug}" />
 	</target>
 
-	<target name="dist" depends="dist-release,dist-debug" />
+	<target name="dist" depends="dist-release,dist-debug,doc" />
 
 	<target name="clean" description="clean up">
 		<delete dir="${build}" />
