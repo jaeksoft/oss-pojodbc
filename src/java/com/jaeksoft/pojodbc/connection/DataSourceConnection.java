@@ -28,12 +28,35 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import com.jaeksoft.pojodbc.Transaction;
-import com.jaeksoft.pojodbc.connection.ConnectionManager;
 
+/**
+ * DataSourceConnection is a connection manager getting database connection from
+ * a javax.sql.DataSource.
+ * <p>
+ * That example show how to create an instance of a DataSourceConnection using
+ * DataSource from JNDI.
+ * 
+ * <pre>
+ * Context initContext = new InitialContext();
+ * Context envContext = (Context) initContext.lookup(&quot;java:/comp/env&quot;);
+ * DataSource ds = (DataSource) envContext.lookup(&quot;myDatabase&quot;);
+ * DatabaseConnectionManager connectionManager = new DataSourceConnection(ds);
+ * </pre>
+ * 
+ * </p>
+ * 
+ * @author Emmanuel Keller
+ * 
+ */
 public class DataSourceConnection extends ConnectionManager {
 
 	private DataSource dataSource;
 
+	/**
+	 * @param dataSource
+	 *            The DataSource that connection manager will use to get new
+	 *            database connection.
+	 */
 	public DataSourceConnection(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}

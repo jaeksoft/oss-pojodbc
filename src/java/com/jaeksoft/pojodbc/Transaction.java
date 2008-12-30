@@ -28,8 +28,35 @@ import java.sql.SQLException;
 import java.util.HashSet;
 
 import com.jaeksoft.pojodbc.connection.ConnectionManager;
-import com.jaeksoft.pojodbc.Query;
 
+/**
+ * Transaction represents a new database transaction. Currently, a transaction
+ * represents a database connection. Further implementation could share same
+ * connection.</p>
+ * <p>
+ * Transaction automatically closed every Query used.
+ * </p>
+ * <p>
+ * That source code is our recommended way to use it. You have close the
+ * transaction in a finally statement to be sure that the database connection
+ * will be released.
+ * 
+ * <pre>
+ * Transaction transaction = null;
+ * try {
+ * 	transaction = connectionManager.getNewTransaction(false,
+ * 			javax.sql.Connection.TRANSACTION_READ_COMMITTED);
+ * 	// ... do everything you need ...
+ * } finally {
+ * 	if (transaction != null)
+ * 		transaction.close();
+ * }
+ * 
+ * </pre>
+ * 
+ * @author ekeller
+ * 
+ */
 public class Transaction {
 
 	private Connection cnx;
@@ -42,7 +69,7 @@ public class Transaction {
 		cnx.setAutoCommit(autoCommit);
 	}
 
-	public void closeQuery(Query query) {
+	void closeQuery(Query query) {
 		synchronized (this) {
 			query.close();
 			queries.remove(query);
@@ -59,6 +86,10 @@ public class Transaction {
 		}
 	}
 
+	/**
+	 * Close all queries and the transaction. No commit or rollback are
+	 * performed.
+	 */
 	public void close() {
 		synchronized (this) {
 			if (cnx == null)
@@ -71,12 +102,22 @@ public class Transaction {
 		}
 	}
 
+	/**
+	 * Usual JDBC/SQL transaction rollback
+	 * 
+	 * @throws SQLException
+	 */
 	public void rollback() throws SQLException {
 		synchronized (cnx) {
 			cnx.rollback();
 		}
 	}
 
+	/**
+	 * Usual JDBC/SQL transaction commit
+	 * 
+	 * @throws SQLException
+	 */
 	public void commit() throws SQLException {
 		synchronized (cnx) {
 			cnx.commit();
@@ -91,12 +132,37 @@ public class Transaction {
 		}
 	}
 
+	/**
+	 * Create a new Query
+	 * 
+	 * @param sql
+	 *            The native SQL query
+	 * @return a new Query instance
+	 * @throws SQLException
+	 */
 	public Query prepare(String sql) throws SQLException {
 		Query query = new Query(cnx.prepareStatement(sql));
 		addQuery(query);
 		return query;
 	}
 
+	/**
+	 * Create a new Query with standard JDBC properties.
+	 * <p>
+	 * ResultSetType and ResultSetConcureny are JDBC standard parameters like
+	 * ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.TYPE_FORWARD_ONLY,
+	 * ResultSet.CONCUR_READ_ONLY, ResultSet.CONCUR_UPDATABLE, ...
+	 * </p>
+	 * 
+	 * @param sql
+	 *            The native SQL query
+	 * @param resultSetType
+	 *            A standard JDBC ResultSet type
+	 * @param resultSetConcurency
+	 *            A standard JDBC Result concurency property
+	 * @return a new Query instance
+	 * @throws SQLException
+	 */
 	public Query prepare(String sql, int resultSetType, int resultSetConcurency)
 			throws SQLException {
 		Query query = new Query(cnx.prepareStatement(sql, resultSetType,
@@ -105,6 +171,15 @@ public class Transaction {
 		return query;
 	}
 
+	/**
+	 * A convenient way to directly execute an INSERT/UPDATE/DELETE SQL
+	 * statement.
+	 * 
+	 * @param sql
+	 *            The native SQL query
+	 * @return the row count
+	 * @throws SQLException
+	 */
 	public int update(String sql) throws SQLException {
 		return prepare(sql).update();
 	}

@@ -30,17 +30,51 @@ import java.util.logging.Level;
 
 import com.jaeksoft.pojodbc.Transaction;
 
+/**
+ * JDBCConnection is a connection manager getting database connection from an
+ * JDBC url.
+ * <p>
+ * Take care to set driver and url parameters before using getNewTransaction
+ * method.
+ * </p>
+ * <p>
+ * That example show how create an instance of a JDBCConnection using a MySQL
+ * database.
+ * 
+ * <pre>
+ * JDBCConnection connectionManager = new JDBCConnection();
+ * connectionManager.setDriver(&quot;com.mysql.jdbc.Driver&quot;);
+ * connectionManager
+ * 		.setUrl(&quot;jdbc:mysql://localhost:3306/dbName?autoReconnect=true&quot;);
+ * </pre>
+ * 
+ * </p>
+ * 
+ * @author Emmanuel Keller
+ * 
+ */
 public class JDBCConnection extends ConnectionManager {
 
 	private String url;
 
 	private String driver;
 
+	/**
+	 * The empty constructor. Used for bean compatibility. Parameters can be
+	 * passed using setters.
+	 */
 	public JDBCConnection() {
 		url = null;
 		driver = null;
 	}
 
+	/**
+	 * 
+	 * @param driver
+	 *            The driver class name
+	 * @param url
+	 *            The url used to connect to database
+	 */
 	public JDBCConnection(String driver, String url) {
 		setDriver(driver);
 		setUrl(url);
@@ -76,6 +110,18 @@ public class JDBCConnection extends ConnectionManager {
 		return getNewTransaction(autoCommit, transactionIsolation, null);
 	}
 
+	/**
+	 * Get a new Transaction instance. You can add a suffix on the url used to
+	 * establish the database connection.
+	 * 
+	 * @param autoCommit
+	 * @param transactionIsolation
+	 * @param urlSuffix
+	 *            A suffix added to the url when establishing the database
+	 *            connection
+	 * @return a new Transaction instance
+	 * @throws SQLException
+	 */
 	public Transaction getNewTransaction(boolean autoCommit,
 			int transactionIsolation, String urlSuffix) throws SQLException {
 		String localUrl = url;

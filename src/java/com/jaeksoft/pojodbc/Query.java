@@ -39,6 +39,46 @@ import java.util.logging.Logger;
 
 import com.jaeksoft.pojodbc.connection.ConnectionManager;
 
+/**
+ * Query represents an SQL query. In JDBC view, a query contains at least a
+ * PreparedStatement. It can also contains a ResultSet. Statement and ResultSet
+ * are automatically closed when Query or Transaction is closed.
+ * <p>
+ * The most important behavior is to return a list of Pojo instead of a
+ * ResultSet.
+ * </p>
+ * <p>
+ * The example show how to use it.
+ * 
+ * <pre>
+ * Transaction transaction = null;
+ * try {
+ *   // Obtain a new transaction from the ConnectionManager
+ *   transaction = connectionManager.getNewTransaction(false,
+ *                             javax.sql.Connection.TRANSACTION_READ_COMMITTED);
+ *   // Start a new Query
+ *   Query query = transaction.prepare(&quot;SELECT * FROM MyTable WHERE status=?&quot;);
+ *   query.getStatement().setString(1, &quot;open&quot;);
+ *   query.setFirstResult(0);
+ *   query.setMaxResults(10);
+ *   
+ *   // Get the result
+ *   List&lt;MyPojo&gt; myPojoList = query.getResultList(MyPojo.class));
+ *   
+ *   // do everything you need
+ *   
+ * } finally {
+ *   // Release the transaction
+ *   if (transaction != null)
+ *     transaction.close();
+ * }
+ * </pre>
+ * 
+ * </p>
+ * 
+ * @author Emmanuel Keller
+ * 
+ */
 public class Query {
 
 	private ResultSet resultSet;
@@ -56,14 +96,27 @@ public class Query {
 		maxResults = -1;
 	}
 
+	/**
+	 * Set the first position of the result
+	 * 
+	 * @param firstResult
+	 */
 	public void setFirstResult(int firstResult) {
 		this.firstResult = firstResult;
 	}
 
+	/**
+	 * Set the maximum number of rows
+	 * 
+	 * @param maxResults
+	 */
 	public void setMaxResults(int maxResults) {
 		this.maxResults = maxResults;
 	}
 
+	/**
+	 * Close all component of that query (ResultSet and Statement)
+	 */
 	protected void close() {
 		ConnectionManager.close(resultSet, statement, null);
 	}
@@ -169,6 +222,11 @@ public class Query {
 		return rows;
 	}
 
+	/**
+	 * Get the PreparedStatement used by that Query
+	 * 
+	 * @return a PreparedStatement
+	 */
 	public PreparedStatement getStatement() {
 		return statement;
 	}
@@ -181,6 +239,15 @@ public class Query {
 		resultSet = statement.executeQuery();
 	}
 
+	/**
+	 * Returns the list of POJO. The list is cached. Every subsequent call
+	 * returns the same list.
+	 * 
+	 * @param beanClass
+	 *            The class name of POJO returned in the list
+	 * @return a list of POJO
+	 * @throws SQLException
+	 */
 	public List<? extends Object> getResultList(Class<?> beanClass)
 			throws SQLException {
 		if (resultList != null)
@@ -190,21 +257,44 @@ public class Query {
 		return resultList;
 	}
 
+	/**
+	 * @return a list of Row object.
+	 * @throws SQLException
+	 */
 	public List<Row> getResultList() throws SQLException {
 		checkResultSet();
 		return createRowList();
 	}
 
+	/**
+	 * Do a PreparedStatement.executeUpdate(). A convenient way to execute an
+	 * INSERT/UPDATE/DELETE SQL statement.
+	 * 
+	 * @return a row count
+	 * @throws SQLException
+	 */
 	public int update() throws SQLException {
 		return statement.executeUpdate();
 	}
 
+	/**
+	 * FirstResult and MaxResults parameters are ignored.
+	 * 
+	 * @return the number of row found for a select
+	 * @throws SQLException
+	 */
 	public int getResultCount() throws SQLException {
 		checkResultSet();
 		resultSet.last();
 		return resultSet.getRow();
 	}
 
+	/**
+	 * Get the ResultSet used by that Query.
+	 * 
+	 * @return the JDBC ResultSet
+	 * @throws SQLException
+	 */
 	public ResultSet getResultSet() throws SQLException {
 		checkResultSet();
 		return resultSet;

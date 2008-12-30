@@ -32,18 +32,50 @@ import java.util.logging.Logger;
 
 import com.jaeksoft.pojodbc.Transaction;
 
+/**
+ * 
+ * ConnectionManager is the abstract class for all ConnectionManager.
+ * 
+ * @author Emmanuel Keller
+ * 
+ */
 public abstract class ConnectionManager {
 
+	/**
+	 * Use com.jaeksoft.pojodbc.connection.ConnectionManager to manager the log
+	 * level.
+	 */
 	static protected Logger logger = Logger.getLogger(ConnectionManager.class
 			.getCanonicalName());
 
+	/**
+	 * Start a new transaction (or/and a new connection).
+	 * 
+	 * @param autoCommit
+	 *            Enable or disable autocommit (if available)
+	 * @param transactionIsolation
+	 *            java.sql.Connection.TRANSACTION...
+	 * @return a new Transaction object
+	 * @throws SQLException
+	 */
 	public abstract Transaction getNewTransaction(boolean autoCommit,
 			int transactionIsolation) throws SQLException;
 
-	public static void close(ResultSet rs, Statement stmt, Connection cnx) {
-		if (rs != null)
+	/**
+	 * That static method try to close quietly each parameters. Null parameters
+	 * are allowed. SQLException are catched and logged.
+	 * 
+	 * @param resultSet
+	 *            A ResultSet to close
+	 * @param stmt
+	 *            A Statement to close
+	 * @param cnx
+	 *            A connection to close
+	 */
+	public static void close(ResultSet resultSet, Statement stmt, Connection cnx) {
+		if (resultSet != null)
 			try {
-				rs.close();
+				resultSet.close();
 			} catch (SQLException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
