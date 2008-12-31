@@ -45,7 +45,7 @@
 	</path>
 
 	<target name="doc">
-		<javadoc sourcepath="${src}" destdir="${doc-public}" access="protected" classpathref="libclasspath" />
+		<javadoc overview="${src}/overview.html" sourcepath="${src}" destdir="${doc-public}" access="protected" classpathref="libclasspath" />
 		<javadoc sourcepath="${src}" destdir="${doc-dev}" access="private" classpathref="libclasspath" />
 	</target>
 

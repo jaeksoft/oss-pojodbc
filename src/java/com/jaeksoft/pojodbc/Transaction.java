@@ -30,9 +30,8 @@ import java.util.HashSet;
 import com.jaeksoft.pojodbc.connection.ConnectionManager;
 
 /**
- * Transaction represents a new database transaction. Currently, a transaction
- * represents a database connection. Further implementation could share same
- * connection.</p>
+ * Represents a new database transaction. Currently, a transaction represents a
+ * database connection. Further implementation could share same connection.</p>
  * <p>
  * Transaction automatically closed every Query used.
  * </p>

@@ -40,7 +40,7 @@ import java.util.logging.Logger;
 import com.jaeksoft.pojodbc.connection.ConnectionManager;
 
 /**
- * Query represents an SQL query. In JDBC view, a query contains at least a
+ * Represents an SQL query. In JDBC view, a query contains at least a
  * PreparedStatement. It can also contains a ResultSet. Statement and ResultSet
  * are automatically closed when Query or Transaction is closed.
  * <p>

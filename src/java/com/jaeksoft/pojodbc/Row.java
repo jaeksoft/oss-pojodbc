@@ -26,6 +26,13 @@ package com.jaeksoft.pojodbc;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Represents a row from a ResultSet. A convienient way to retrieve data from
+ * ResultSet if you don't want to use POJO.
+ * 
+ * @author ekeller
+ * 
+ */
 public class Row {
 
 	private Object[] columns;

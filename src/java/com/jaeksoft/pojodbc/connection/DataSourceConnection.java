@@ -30,8 +30,7 @@ import javax.sql.DataSource;
 import com.jaeksoft.pojodbc.Transaction;
 
 /**
- * DataSourceConnection is a connection manager getting database connection from
- * a javax.sql.DataSource.
+ * A connection manager getting database connection from a javax.sql.DataSource.
  * <p>
  * That example show how to create an instance of a DataSourceConnection using
  * DataSource from JNDI.

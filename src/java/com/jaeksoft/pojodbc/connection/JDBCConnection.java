@@ -31,8 +31,7 @@ import java.util.logging.Level;
 import com.jaeksoft.pojodbc.Transaction;
 
 /**
- * JDBCConnection is a connection manager getting database connection from an
- * JDBC url.
+ * A connection manager getting database connection from an JDBC url.
  * <p>
  * Take care to set driver and url parameters before using getNewTransaction
  * method.
