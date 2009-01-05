@@ -45,8 +45,8 @@
 	</path>
 
 	<target name="doc">
-		<javadoc overview="${src}/overview.html" sourcepath="${src}" destdir="${doc-public}" access="protected" classpathref="libclasspath" />
-		<javadoc sourcepath="${src}" destdir="${doc-dev}" access="private" classpathref="libclasspath" />
+		<javadoc doctitle="Jaeksoft Pojodbc - Public Javadoc" windowtitle="Jaeksoft Pojodbc" overview="${src}/overview.html" sourcepath="${src}" destdir="${doc-public}" access="protected" classpathref="libclasspath" />
+		<javadoc doctitle="Jaeksoft Pojodbc - Developer Javadoc" windowtitle="Jaeksoft Pojodbc" overview="${src}/overview.html" sourcepath="${src}" destdir="${doc-dev}" access="private" classpathref="libclasspath" />
 	</target>
 
 	<target name="compile-release" depends="init" description="compile the source ">
