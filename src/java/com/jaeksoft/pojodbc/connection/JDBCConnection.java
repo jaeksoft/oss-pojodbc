@@ -104,6 +104,7 @@ public class JDBCConnection extends ConnectionManager {
 		this.url = url;
 	}
 
+	@Override
 	public Transaction getNewTransaction(boolean autoCommit,
 			int transactionIsolation) throws SQLException {
 		return getNewTransaction(autoCommit, transactionIsolation, null);

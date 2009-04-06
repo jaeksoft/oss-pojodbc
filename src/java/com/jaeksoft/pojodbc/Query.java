@@ -231,6 +231,17 @@ public class Query {
 		return statement;
 	}
 
+	/**
+	 * Release the last ResultSet (if any) and the last ResultList.
+	 */
+	public void reUse() {
+		if (resultSet != null) {
+			ConnectionManager.close(resultSet, null, null);
+			resultSet = null;
+		}
+		resultList = null;
+	}
+
 	private void checkResultSet() throws SQLException {
 		if (resultSet != null)
 			return;
@@ -248,8 +259,7 @@ public class Query {
 	 * @return a list of POJO
 	 * @throws SQLException
 	 */
-	public List<? extends Object> getResultList(Class<?> beanClass)
-			throws SQLException {
+	public List<?> getResultList(Class<?> beanClass) throws SQLException {
 		if (resultList != null)
 			return resultList;
 		checkResultSet();

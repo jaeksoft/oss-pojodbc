@@ -62,6 +62,17 @@ public abstract class ConnectionManager {
 			int transactionIsolation) throws SQLException;
 
 	/**
+	 * Start a new transaction (or/and a new connection) with autoCommit set to
+	 * true, and transactionIsolation set to Connection.TRANSACTION_NONE
+	 * 
+	 * @return a new Transaction object
+	 * @throws SQLException
+	 */
+	public Transaction getNewTransaction() throws SQLException {
+		return getNewTransaction(true, Connection.TRANSACTION_NONE);
+	}
+
+	/**
 	 * That static method try to close quietly each parameters. Null parameters
 	 * are allowed. SQLException are catched and logged.
 	 * 
