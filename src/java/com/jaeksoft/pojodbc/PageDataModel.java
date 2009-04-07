@@ -31,8 +31,6 @@ import java.util.List;
 import javax.faces.model.DataModel;
 
 import com.jaeksoft.pojodbc.connection.ConnectionManager;
-import com.jaeksoft.pojodbc.Query;
-import com.jaeksoft.pojodbc.Transaction;
 
 public abstract class PageDataModel<T> extends DataModel {
 
@@ -117,7 +115,7 @@ public abstract class PageDataModel<T> extends DataModel {
 			if (needUpdate(index))
 				try {
 					populate(index);
-				} catch (SQLException e) {
+				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
 		}
@@ -131,7 +129,7 @@ public abstract class PageDataModel<T> extends DataModel {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void populate(int index) throws SQLException {
+	public void populate(int index) throws Exception {
 		synchronized (this) {
 			if (index == currentStart)
 				return;
@@ -145,7 +143,7 @@ public abstract class PageDataModel<T> extends DataModel {
 				list = (List<T>) query.getResultList(beanClass);
 				size = query.getResultCount();
 				currentStart = index;
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				throw e;
 			} finally {
 				if (transaction != null)

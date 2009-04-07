@@ -68,13 +68,9 @@ public class Transaction {
 		cnx.setAutoCommit(autoCommit);
 	}
 
-	public Transaction(Connection cnx) throws SQLException {
-		this(cnx, true, Connection.TRANSACTION_NONE);
-	}
-
 	void closeQuery(Query query) {
 		synchronized (this) {
-			query.close();
+			query.closeAll();
 			queries.remove(query);
 		}
 	}
@@ -84,7 +80,7 @@ public class Transaction {
 			if (queries == null)
 				return;
 			for (Query query : queries)
-				query.close();
+				query.closeAll();
 			queries.clear();
 		}
 	}

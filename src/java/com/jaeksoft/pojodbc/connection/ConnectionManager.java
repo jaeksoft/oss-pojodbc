@@ -63,13 +63,14 @@ public abstract class ConnectionManager {
 
 	/**
 	 * Start a new transaction (or/and a new connection) with autoCommit set to
-	 * true, and transactionIsolation set to Connection.TRANSACTION_NONE
+	 * true, and transactionIsolation set to
+	 * Connection.TRANSACTION_READ_UNCOMMITTED
 	 * 
 	 * @return a new Transaction object
 	 * @throws SQLException
 	 */
 	public Transaction getNewTransaction() throws SQLException {
-		return getNewTransaction(true, Connection.TRANSACTION_NONE);
+		return getNewTransaction(true, Connection.TRANSACTION_READ_UNCOMMITTED);
 	}
 
 	/**

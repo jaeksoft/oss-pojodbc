@@ -117,7 +117,7 @@ public class Query {
 	/**
 	 * Close all component of that query (ResultSet and Statement)
 	 */
-	protected void close() {
+	protected void closeAll() {
 		ConnectionManager.close(resultSet, statement, null);
 	}
 
@@ -151,49 +151,44 @@ public class Query {
 		}
 	}
 
-	private List<?> createBeanList(Class<?> beanClass) throws SQLException {
-		try {
-			// Find related methods and columns
-			ResultSetMetaData rs = resultSet.getMetaData();
-			int columnCount = rs.getColumnCount();
-			BeanInfo beanInfo = Introspector.getBeanInfo(beanClass);
-			PropertyDescriptor[] props = beanInfo.getPropertyDescriptors();
-			ArrayList<MethodColumnIndex> methods = new ArrayList<MethodColumnIndex>();
+	private List<?> createBeanList(Class<?> beanClass) throws Exception {
+		// Find related methods and columns
+		ResultSetMetaData rs = resultSet.getMetaData();
+		int columnCount = rs.getColumnCount();
+		BeanInfo beanInfo;
+		beanInfo = Introspector.getBeanInfo(beanClass);
+		PropertyDescriptor[] props = beanInfo.getPropertyDescriptors();
+		ArrayList<MethodColumnIndex> methods = new ArrayList<MethodColumnIndex>();
 
-			if (logger.isLoggable(Level.FINEST))
-				logger.finest("Search properties for bean "
-						+ beanClass.getSimpleName());
-			for (int i = 1; i <= columnCount; i++) {
-				String columnName = rs.getColumnLabel(i);
-				for (PropertyDescriptor propDesc : props) {
-					if (propDesc.getWriteMethod() != null
-							&& propDesc.getName().equalsIgnoreCase(columnName)) {
-						methods.add(new MethodColumnIndex(i, propDesc
-								.getWriteMethod()));
-						if (logger.isLoggable(Level.FINEST))
-							logger.finest("Found property \""
-									+ propDesc.getName()
-									+ "\" for column name \"" + columnName
-									+ "\"");
-						break;
-					}
+		if (logger.isLoggable(Level.FINEST))
+			logger.finest("Search properties for bean "
+					+ beanClass.getSimpleName());
+		for (int i = 1; i <= columnCount; i++) {
+			String columnName = rs.getColumnLabel(i);
+			for (PropertyDescriptor propDesc : props) {
+				if (propDesc.getWriteMethod() != null
+						&& propDesc.getName().equalsIgnoreCase(columnName)) {
+					methods.add(new MethodColumnIndex(i, propDesc
+							.getWriteMethod()));
+					if (logger.isLoggable(Level.FINEST))
+						logger.finest("Found property \"" + propDesc.getName()
+								+ "\" for column name \"" + columnName + "\"");
+					break;
 				}
 			}
-			// Create bean list
-			ArrayList<Object> list = new ArrayList<Object>();
-			moveToFirstResult();
-			int limit = maxResults;
-			while (resultSet.next() && limit-- != 0) {
-				Object bean = Beans.instantiate(beanClass.getClassLoader(),
-						beanClass.getCanonicalName());
-				for (MethodColumnIndex methodColumnIndex : methods)
-					methodColumnIndex.invoke(bean, resultSet);
-				list.add(bean);
-			}
-			return list;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
 		}
+		// Create bean list
+		ArrayList<Object> list = new ArrayList<Object>();
+		moveToFirstResult();
+		int limit = maxResults;
+		while (resultSet.next() && limit-- != 0) {
+			Object bean = Beans.instantiate(beanClass.getClassLoader(),
+					beanClass.getCanonicalName());
+			for (MethodColumnIndex methodColumnIndex : methods)
+				methodColumnIndex.invoke(bean, resultSet);
+			list.add(bean);
+		}
+		return list;
 	}
 
 	private void moveToFirstResult() throws SQLException {
@@ -259,7 +254,7 @@ public class Query {
 	 * @return a list of POJO
 	 * @throws SQLException
 	 */
-	public List<?> getResultList(Class<?> beanClass) throws SQLException {
+	public List<?> getResultList(Class<?> beanClass) throws Exception {
 		if (resultList != null)
 			return resultList;
 		checkResultSet();

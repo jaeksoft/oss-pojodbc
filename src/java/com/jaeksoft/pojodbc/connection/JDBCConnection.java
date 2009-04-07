@@ -73,8 +73,13 @@ public class JDBCConnection extends ConnectionManager {
 	 *            The driver class name
 	 * @param url
 	 *            The url used to connect to database
+	 * @throws ClassNotFoundException
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
 	 */
-	public JDBCConnection(String driver, String url) {
+	public JDBCConnection(String driver, String url)
+			throws InstantiationException, IllegalAccessException,
+			ClassNotFoundException {
 		setDriver(driver);
 		setUrl(url);
 	}
@@ -83,16 +88,13 @@ public class JDBCConnection extends ConnectionManager {
 		return driver;
 	}
 
-	public void setDriver(String driver) {
+	public void setDriver(String driver) throws InstantiationException,
+			IllegalAccessException, ClassNotFoundException {
 		if (logger.isLoggable(Level.FINEST))
 			logger.finest("New Database instance - Driver: " + driver
 					+ " Url: " + url);
-		try {
-			if (driver != null)
-				Class.forName(driver);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
+		if (driver != null)
+			Class.forName(driver).newInstance();
 		this.driver = driver;
 	}
 
