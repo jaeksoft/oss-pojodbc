@@ -1,7 +1,7 @@
 /**   
  * License Agreement for Jaeksoft Pojodbc
  *
- * Copyright (C) 2008 Emmanuel Keller / Jaeksoft
+ * Copyright (C) 2008-2010 Emmanuel Keller / Jaeksoft
  * 
  * http://www.jaeksoft.com
  * 
@@ -178,7 +178,7 @@ public class Query {
 			}
 		}
 		// Create bean list
-		ArrayList<Object> list = new ArrayList<Object>();
+		List<Object> list = new ArrayList<Object>();
 		moveToFirstResult();
 		int limit = maxResults;
 		while (resultSet.next() && limit-- != 0) {
@@ -206,14 +206,19 @@ public class Query {
 		}
 	}
 
-	private List<Row> createRowList() throws SQLException {
+	private static List<Row> createRowList(ResultSet resultSet, int limit)
+			throws SQLException {
 		ResultSetMetaData rs = resultSet.getMetaData();
 		int columnCount = rs.getColumnCount();
 		ArrayList<Row> rows = new ArrayList<Row>();
-		moveToFirstResult();
-		int limit = maxResults;
 		while (resultSet.next() && limit-- != 0)
 			rows.add(new Row(columnCount, resultSet));
+		return rows;
+	}
+
+	private List<Row> createRowList() throws SQLException {
+		moveToFirstResult();
+		List<Row> rows = createRowList(resultSet, maxResults);
 		return rows;
 	}
 
@@ -280,6 +285,16 @@ public class Query {
 	 */
 	public int update() throws SQLException {
 		return statement.executeUpdate();
+	}
+
+	/**
+	 * Returns the generated keys after an insert statement
+	 * 
+	 * @return the list of generated keys
+	 * @throws SQLException
+	 */
+	public List<Row> getGeneratedKeys() throws SQLException {
+		return createRowList(statement.getGeneratedKeys(), -1);
 	}
 
 	/**
