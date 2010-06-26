@@ -58,6 +58,10 @@ public class JDBCConnection extends ConnectionManager {
 
 	private String driver;
 
+	private String username;
+
+	private String password;
+
 	/**
 	 * The empty constructor. Used for bean compatibility. Parameters can be
 	 * passed using setters.
@@ -106,6 +110,14 @@ public class JDBCConnection extends ConnectionManager {
 		this.url = url;
 	}
 
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	@Override
 	public Transaction getNewTransaction(boolean autoCommit,
 			int transactionIsolation) throws SQLException {
@@ -131,7 +143,11 @@ public class JDBCConnection extends ConnectionManager {
 			localUrl += urlSuffix;
 		if (logger.isLoggable(Level.FINEST))
 			logger.finest("DriverManager.getConnection " + localUrl);
-		Connection cnx = DriverManager.getConnection(localUrl);
+		Connection cnx = null;
+		if (username != null || password != null)
+			cnx = DriverManager.getConnection(localUrl, username, password);
+		else
+			cnx = DriverManager.getConnection(localUrl);
 		cnx.setTransactionIsolation(transactionIsolation);
 		cnx.setAutoCommit(autoCommit);
 		return new Transaction(cnx, autoCommit, transactionIsolation);

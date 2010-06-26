@@ -11,24 +11,26 @@ application. Without any configuration file, without any annotation, use
 your native SQL request with JDBC and get POJO(s).</p>
 
 <h2>Sample code</h2>
-<p>Firstable, you need to create a ConnectionManager. A
-ConnectionManager is not a connection pool. Taking a jdbc url or a
+<p>Firstable, you have to create a ConnectionManager. A
+ConnectionManager is not a connection pool. Taking a JDBC URL or a
 datasource, the ConnectionManager just provide new connection.</p>
 <pre>
  JDBCConnection connectionManager = new JDBCConnection();
  connectionManager.setDriver(&quot;com.mysql.jdbc.Driver&quot;);
  connectionManager
  		.setUrl(&quot;jdbc:mysql://localhost:3306/dbName?autoReconnect=true&quot;);
+ connectionManager.setUsername("user");
+ connectionManager.setPassword("pass");
  </pre>
-<p>Now we can start working with our database. Pojodbc take care of
-database connection for you. You work with a transaction to obtain a
+<p>Now we can start working with our database. Pojodbc take care of the
+database connection. The following code shows how to obtain a
 list of Pojo.</p>
 <pre>
  Transaction transaction = null;
  try {
     // Obtain a new transaction from the ConnectionManager
     transaction = connectionManager.getNewTransaction(false,
-                              javax.sql.Connection.TRANSACTION_READ_COMMITTED);
+                              java.sql.Connection.TRANSACTION_READ_COMMITTED);
     // Start a new Query
     Query query = transaction.prepare(&quot;SELECT * FROM MyTable WHERE status=?&quot;);
     query.getStatement().setString(1, &quot;open&quot;);
@@ -52,7 +54,7 @@ Pojodbc will release all Statement, ResultSet and Connection.</p>
 <p>You dont have to maintain the transaction open to use your Pojo
 list.</p>
 <h2>License and copyright</h2>
-<p>Copyright (C) 2008 Emmanuel Keller / Jaeksoft</p>
+<p>Copyright (C) 2008-2010 Emmanuel Keller / Jaeksoft</p>
 <p>Jaeksoft Pojodbc is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License as published
 by the Free Software Foundation, either version 3 of the License, or (at
@@ -72,9 +74,9 @@ please see:
 <ul>
 	<li><a href="http://sourceforge.net/projects/pojodbc">The
 	sourceforge project</a></li>
-	<li><a href="http://www.jaeksoft.com/pojodbc.html">The
+	<li><a href="http://pojodbc.sourceforge.net">The
 	official website</a></li>
-	<li><a href="http://www.jaeksoft.com/javadoc/Pojodbc/public">The
+	<li><a href="http://pojodbc.sourceforge.net/public">The
 	Javadoc official location</a></li>
 </ul>
 

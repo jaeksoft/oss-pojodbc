@@ -1,5 +1,5 @@
 Jaeksoft Pojodbc
-Copyright 2008 Emmanuel Keller / Jaeksoft
+Copyright 2008-2010 Emmanuel Keller / Jaeksoft
 http://www.jaeksoft.com
 
 Jaeksoft Pojodbc is free software: you can redistribute it and/or modify
