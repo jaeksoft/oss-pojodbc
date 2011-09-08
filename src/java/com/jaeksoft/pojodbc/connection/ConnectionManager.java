@@ -54,23 +54,35 @@ public abstract class ConnectionManager {
 	 * @param autoCommit
 	 *            Enable or disable autocommit (if available)
 	 * @param transactionIsolation
-	 *            java.sql.Connection.TRANSACTION...
+	 *            java.sql.Connection.TRANSACTION..., or null
 	 * @return a new Transaction object
 	 * @throws SQLException
 	 */
 	public abstract Transaction getNewTransaction(boolean autoCommit,
-			int transactionIsolation) throws SQLException;
+			Integer transactionIsolation) throws SQLException;
+
+	/**
+	 * Start a new transaction (or/and a new connection)
+	 * 
+	 * @param autoCommit
+	 *            Enable or disable autocommit (if available)
+	 * @return a new Transaction object
+	 * @throws SQLException
+	 */
+	public Transaction getNewTransaction(boolean autoCommit)
+			throws SQLException {
+		return getNewTransaction(autoCommit, null);
+	}
 
 	/**
 	 * Start a new transaction (or/and a new connection) with autoCommit set to
-	 * true, and transactionIsolation set to
-	 * Connection.TRANSACTION_READ_UNCOMMITTED
+	 * true, and transactionIsolation set to null
 	 * 
 	 * @return a new Transaction object
 	 * @throws SQLException
 	 */
 	public Transaction getNewTransaction() throws SQLException {
-		return getNewTransaction(true, Connection.TRANSACTION_READ_UNCOMMITTED);
+		return getNewTransaction(true);
 	}
 
 	/**

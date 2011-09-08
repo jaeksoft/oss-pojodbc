@@ -120,7 +120,7 @@ public class JDBCConnection extends ConnectionManager {
 
 	@Override
 	public Transaction getNewTransaction(boolean autoCommit,
-			int transactionIsolation) throws SQLException {
+			Integer transactionIsolation) throws SQLException {
 		return getNewTransaction(autoCommit, transactionIsolation, null);
 	}
 
@@ -137,7 +137,7 @@ public class JDBCConnection extends ConnectionManager {
 	 * @throws SQLException
 	 */
 	public Transaction getNewTransaction(boolean autoCommit,
-			int transactionIsolation, String urlSuffix) throws SQLException {
+			Integer transactionIsolation, String urlSuffix) throws SQLException {
 		String localUrl = url;
 		if (urlSuffix != null)
 			localUrl += urlSuffix;
@@ -148,7 +148,8 @@ public class JDBCConnection extends ConnectionManager {
 			cnx = DriverManager.getConnection(localUrl, username, password);
 		else
 			cnx = DriverManager.getConnection(localUrl);
-		cnx.setTransactionIsolation(transactionIsolation);
+		if (transactionIsolation != null)
+			cnx.setTransactionIsolation(transactionIsolation);
 		cnx.setAutoCommit(autoCommit);
 		return new Transaction(cnx, autoCommit, transactionIsolation);
 	}

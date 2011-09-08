@@ -62,7 +62,7 @@ public class DataSourceConnection extends ConnectionManager {
 
 	@Override
 	public Transaction getNewTransaction(boolean autoCommit,
-			int transactionIsolation) throws SQLException {
+			Integer transactionIsolation) throws SQLException {
 		return new Transaction(dataSource.getConnection(), autoCommit,
 				transactionIsolation);
 	}

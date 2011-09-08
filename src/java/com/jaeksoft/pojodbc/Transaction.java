@@ -63,9 +63,10 @@ public class Transaction {
 	private HashSet<Query> queries;
 
 	public Transaction(Connection cnx, boolean autoCommit,
-			int transactionIsolation) throws SQLException {
+			Integer transactionIsolation) throws SQLException {
 		this.cnx = cnx;
-		cnx.setTransactionIsolation(transactionIsolation);
+		if (transactionIsolation != null)
+			cnx.setTransactionIsolation(transactionIsolation);
 		cnx.setAutoCommit(autoCommit);
 	}
 
