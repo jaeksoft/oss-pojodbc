@@ -1,0 +1,57 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.jaeksoft</groupId>
+	<artifactId>pojodbc</artifactId>
+	<name>Pojodbc</name>
+	<url>https://github.com/emmmanuel-keller/pojodbc</url>
+	<licenses>
+		<license>
+			<name>General Lesser Public License, Version 3.0</name>
+			<url>http://www.gnu.org/licenses/lgpl.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+	<description>A lightweight JDBC/POJO abstraction layer</description>
+	<organization>
+		<name>Jaeksoft</name>
+		<url>http://www.open-search-server.com</url>
+	</organization>
+	<build>
+		<finalName>${project.artifactId}-${project.version}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+			</plugin>
+		</plugins>
+	</build>
+	<version>1.3-DEV</version>
+	<scm>
+		<url>https://github.com/emmmanuel-keller/pojodbc.git</url>
+	</scm>
+	<issueManagement>
+		<url>https://github.com/emmmanuel-keller/pojodbc/issues</url>
+	</issueManagement>
+	<ciManagement>
+		<url>http://www.open-search-server.com/jenkins</url>
+	</ciManagement>
+	<dependencies>
+		<dependency>
+			<groupId>javax.faces</groupId>
+			<artifactId>jsf-api</artifactId>
+			<version>2.1</version>
+		</dependency>
+	</dependencies>
+</project>

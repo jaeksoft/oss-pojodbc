@@ -1,7 +1,7 @@
 /**   
  * License Agreement for Jaeksoft Pojodbc
  *
- * Copyright (C) 2008-2010 Emmanuel Keller / Jaeksoft
+ * Copyright (C) 2008-2013 Emmanuel Keller / Jaeksoft
  * 
  * http://www.jaeksoft.com
  * 
@@ -17,7 +17,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
+ *  You should have received a copy of the GNU Lesser General Public License
  *  along with Jaeksoft Pojodbc.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
@@ -33,6 +33,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,7 +83,7 @@ import com.jaeksoft.pojodbc.connection.ConnectionManager;
 public class Query {
 
 	private ResultSet resultSet;
-	private List<?> resultList;
+	private HashMap<Class<?>, List<?>> resultListMap;
 	private PreparedStatement statement;
 	private int firstResult;
 	private int maxResults;
@@ -94,6 +95,7 @@ public class Query {
 		this.statement = statement;
 		firstResult = 0;
 		maxResults = -1;
+		resultListMap = new HashMap<Class<?>, List<?>>();
 	}
 
 	/**
@@ -151,7 +153,7 @@ public class Query {
 		}
 	}
 
-	private List<?> createBeanList(Class<?> beanClass) throws Exception {
+	private <T> List<T> createBeanList(Class<T> beanClass) throws Exception {
 		// Find related methods and columns
 		ResultSetMetaData rs = resultSet.getMetaData();
 		int columnCount = rs.getColumnCount();
@@ -178,11 +180,12 @@ public class Query {
 			}
 		}
 		// Create bean list
-		List<Object> list = new ArrayList<Object>();
+		List<T> list = new ArrayList<T>();
 		moveToFirstResult();
 		int limit = maxResults;
 		while (resultSet.next() && limit-- != 0) {
-			Object bean = Beans.instantiate(beanClass.getClassLoader(),
+			@SuppressWarnings("unchecked")
+			T bean = (T) Beans.instantiate(beanClass.getClassLoader(),
 					beanClass.getCanonicalName());
 			for (MethodColumnIndex methodColumnIndex : methods)
 				methodColumnIndex.invoke(bean, resultSet);
@@ -239,7 +242,7 @@ public class Query {
 			ConnectionManager.close(resultSet, null, null);
 			resultSet = null;
 		}
-		resultList = null;
+		resultListMap.clear();
 	}
 
 	private void checkResultSet() throws SQLException {
@@ -259,11 +262,14 @@ public class Query {
 	 * @return a list of POJO
 	 * @throws SQLException
 	 */
-	public List<?> getResultList(Class<?> beanClass) throws Exception {
+	public <T> List<T> getResultList(Class<T> beanClass) throws Exception {
+		@SuppressWarnings("unchecked")
+		List<T> resultList = (List<T>) resultListMap.get(beanClass);
 		if (resultList != null)
-			return resultList;
+			return (List<T>) resultList;
 		checkResultSet();
 		resultList = createBeanList(beanClass);
+		resultListMap.put(beanClass, resultList);
 		return resultList;
 	}
 

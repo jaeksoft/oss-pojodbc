@@ -1,7 +1,7 @@
 /**   
  * License Agreement for Jaeksoft Pojodbc
  *
- * Copyright (C) 2008-2010 Emmanuel Keller / Jaeksoft
+ * Copyright (C) 2008-2013 Emmanuel Keller / Jaeksoft
  * 
  * http://www.jaeksoft.com
  * 
@@ -17,7 +17,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
+ *  You should have received a copy of the GNU Lesser General Public License
  *  along with Jaeksoft Pojodbc.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
@@ -31,7 +31,7 @@ import javax.faces.model.DataModel;
 
 import com.jaeksoft.pojodbc.connection.ConnectionManager;
 
-public abstract class PageDataModel<T> extends DataModel {
+public abstract class PageDataModel<T> extends DataModel<T> {
 
 	private int currentStart;
 	private int currentIndex;
@@ -69,7 +69,7 @@ public abstract class PageDataModel<T> extends DataModel {
 	}
 
 	@Override
-	public Object getRowData() {
+	public T getRowData() {
 		synchronized (this) {
 			if (currentIndex == -1 || currentStart == -1)
 				return null;
