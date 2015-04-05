@@ -1,27 +1,22 @@
 /**   
- * License Agreement for Jaeksoft Pojodbc
+ * License Agreement for OpenSearchServer Pojodbc
  *
- * Copyright (C) 2008-2013 Emmanuel Keller / Jaeksoft
- * 
- * http://www.jaeksoft.com
- * 
- * This file is part of Jaeksoft Pojodbc.
+ * Copyright 2008-2013 Emmanuel Keller / Jaeksoft
+ * Copyright 2014-2015 OpenSearchServer Inc.
  *
- * Jaeksoft Pojodbc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Jaeksoft Pojodbc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with Jaeksoft Pojodbc.  If not, see <http://www.gnu.org/licenses/>.
- **/
-
-package com.jaeksoft.pojodbc;
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.opensearchserver.pojodbc;
 
 import java.sql.SQLException;
 import java.util.Iterator;
@@ -29,7 +24,7 @@ import java.util.List;
 
 import javax.faces.model.DataModel;
 
-import com.jaeksoft.pojodbc.connection.ConnectionManager;
+import com.opensearchserver.pojodbc.connection.ConnectionManager;
 
 public abstract class PageDataModel<T> extends DataModel<T> {
 
@@ -127,7 +122,6 @@ public abstract class PageDataModel<T> extends DataModel<T> {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void populate(int index) throws Exception {
 		synchronized (this) {
 			if (index == currentStart)
@@ -139,7 +133,7 @@ public abstract class PageDataModel<T> extends DataModel<T> {
 				Query query = getQuery(transaction);
 				query.setFirstResult(index);
 				query.setMaxResults(pageSize);
-				list = (List<T>) query.getResultList(beanClass);
+				list = query.getResultList(beanClass);
 				size = query.getResultCount();
 				currentStart = index;
 			} catch (Exception e) {

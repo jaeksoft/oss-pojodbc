@@ -1,27 +1,22 @@
 /**   
- * License Agreement for Jaeksoft Pojodbc
+ * License Agreement for OpenSearchServer Pojodbc
  *
- * Copyright (C) 2008-2013 Emmanuel Keller / Jaeksoft
- * 
- * http://www.jaeksoft.com
- * 
- * This file is part of Jaeksoft Pojodbc.
+ * Copyright 2008-2013 Emmanuel Keller / Jaeksoft
+ * Copyright 2014-2015 OpenSearchServer Inc.
  *
- * Jaeksoft Pojodbc is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Jaeksoft Pojodbc is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with Jaeksoft Pojodbc.  If not, see <http://www.gnu.org/licenses/>.
- **/
-
-package com.jaeksoft.pojodbc;
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.opensearchserver.pojodbc;
 
 import java.beans.BeanInfo;
 import java.beans.Beans;
@@ -38,7 +33,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.jaeksoft.pojodbc.connection.ConnectionManager;
+import com.opensearchserver.pojodbc.connection.ConnectionManager;
 
 /**
  * Represents an SQL query. In JDBC view, a query contains at least a
@@ -50,6 +45,7 @@ import com.jaeksoft.pojodbc.connection.ConnectionManager;
  * </p>
  * <p>
  * The example show how to use it.
+ * </p>
  * 
  * <pre>
  * Transaction transaction = null;
@@ -75,9 +71,6 @@ import com.jaeksoft.pojodbc.connection.ConnectionManager;
  * }
  * </pre>
  * 
- * </p>
- * 
- * @author Emmanuel Keller
  * 
  */
 public class Query {
@@ -99,18 +92,16 @@ public class Query {
 	}
 
 	/**
-	 * Set the first position of the result
-	 * 
 	 * @param firstResult
+	 *            the position of the first result
 	 */
 	public void setFirstResult(int firstResult) {
 		this.firstResult = firstResult;
 	}
 
 	/**
-	 * Set the maximum number of rows
-	 * 
 	 * @param maxResults
+	 *            the maximum number of rows returned
 	 */
 	public void setMaxResults(int maxResults) {
 		this.maxResults = maxResults;
@@ -261,6 +252,7 @@ public class Query {
 	 *            The class name of POJO returned in the list
 	 * @return a list of POJO
 	 * @throws SQLException
+	 *             if any JDBC error occurs
 	 */
 	public <T> List<T> getResultList(Class<T> beanClass) throws Exception {
 		@SuppressWarnings("unchecked")
@@ -276,6 +268,7 @@ public class Query {
 	/**
 	 * @return a list of Row object.
 	 * @throws SQLException
+	 *             if any JDBC error occurs
 	 */
 	public List<Row> getResultList() throws SQLException {
 		checkResultSet();
@@ -288,6 +281,7 @@ public class Query {
 	 * 
 	 * @return a row count
 	 * @throws SQLException
+	 *             if any JDBC error occurs
 	 */
 	public int update() throws SQLException {
 		return statement.executeUpdate();
@@ -298,6 +292,7 @@ public class Query {
 	 * 
 	 * @return the list of generated keys
 	 * @throws SQLException
+	 *             if any JDBC error occurs
 	 */
 	public List<Row> getGeneratedKeys() throws SQLException {
 		return createRowList(statement.getGeneratedKeys(), -1);
@@ -308,6 +303,7 @@ public class Query {
 	 * 
 	 * @return the number of row found for a select
 	 * @throws SQLException
+	 *             if any JDBC error occurs
 	 */
 	public int getResultCount() throws SQLException {
 		checkResultSet();
@@ -320,6 +316,7 @@ public class Query {
 	 * 
 	 * @return the JDBC ResultSet
 	 * @throws SQLException
+	 *             if any JDBC error occurs
 	 */
 	public ResultSet getResultSet() throws SQLException {
 		checkResultSet();
